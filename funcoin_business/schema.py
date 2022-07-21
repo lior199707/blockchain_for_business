@@ -84,31 +84,17 @@ class BlockSchema(Schema):
         if data["hash"] != funcoin_business.blockchain.Blockchain.hash(block):
             raise ValidationError("Fraudulent block: hash is wrong")
 
-    @post_load
-    def make(self, data, **kwargs):
-        return models.Block(**data)
-
 
 class PeerSchema(Schema):
-    address = fields.Nested(Address(), required=True)
+    """
+    class PeerSchema(marshmallow.Schema)
+    {
+        "address": AddressSchema, the address of the peer.
+        "last_seen": Int, last time the peer was seen on the network.
+    }
+    """
+    address = fields.Nested(AddressSchema(), required=True)
     last_seen = fields.Int(missing=lambda: int(time()))
 
     class Meta:
         ordered = True
-
-
-def main():
-    address = {}
-    address["ip"] = '12345'
-    address["port"] = '8888'
-    # address = {"ip": '12345', "port": 8888}
-    u = Address().load(address)
-    print(u)
-    print(u["ip"])
-    print((u["port"]))
-
-
-# {"ip": '1234', "port": 8888}
-
-if __name__ == '__main__':
-    main()
