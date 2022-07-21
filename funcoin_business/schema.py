@@ -1,5 +1,6 @@
 from time import time
 
+import funcoin_business.blockchain
 from funcoin_business import models
 from funcoin_business.blockchain import Blockchain
 
@@ -53,7 +54,7 @@ class BlockSchema(Schema):
         block.pop("hash")
 
         # if the hash of the block doesn't match the hash provided.
-        if data["hash"] != Blockchain.hash(block):
+        if data["hash"] != funcoin_business.blockchain.Blockchain.hash(block):
             raise ValidationError("Fraudulent block: hash is wrong")
 
     @post_load
