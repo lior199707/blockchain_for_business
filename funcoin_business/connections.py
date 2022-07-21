@@ -16,7 +16,7 @@ class ConnectionPool:
     def __init__(self):
         self.connection_pool = dict()
 
-    async def broadcast(self, message: str):
+    async def broadcast(self, message: str) -> None:
         """
         sends a message to all the user connected to the server
         :param message:  the message to send
@@ -24,19 +24,19 @@ class ConnectionPool:
         for user in list(self.connection_pool.values()):
             await user.receive_message(message)
 
-    def add_peer(self, user: funcoin_business.user.User):
+    def add_peer(self, user: funcoin_business.user.User) -> None:
         """adds a user to the dictionary of the connected users"""
         address = user.get_address()
         self.connection_pool[address] = user
         logger.info("Added new peer to pool", address=address)
 
-    def remove_peer(self, user: funcoin_business.user.User):
+    def remove_peer(self, user: funcoin_business.user.User) -> None:
         """Removes a user from the dictionary of the connected users"""
         address = user.get_address()
         self.connection_pool.pop(address)
         logger.info("Removed peer from pool", address=address)
 
-    def get_alive_peers(self, count):
+    def get_alive_peers(self, count) -> list:
         """
 
         :param count: the number of wanted users.
