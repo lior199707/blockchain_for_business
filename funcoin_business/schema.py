@@ -45,12 +45,20 @@ class TransactionSchema(Schema):
     class Meta:
         ordered = True
 
-    """@post_load
-    def make(self, data, **kwargs):
-        return models.Transaction(**data)"""
-
 
 class BlockSchema(Schema):
+    """
+    class BlockSchema(marshmallow.Schema)
+    {
+        "height": Int, block number.
+        "address": AddressSchema, the address of the creator.
+        "transaction": list of TransactionSchema, the transactions the block holds.
+        "previous_hash": Str, the hash of the previous block .
+        "hash": Str, the hash of the block.
+        "timestamp": Float, the time the block was created.
+    }
+    """
+
     height = fields.Int(required=True)
     address = fields.Nested(Address(), required=True)
     transaction = fields.Nested(TransactionSchema(), required=True)
