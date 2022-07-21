@@ -69,6 +69,10 @@ class User:
         """
         self.writer.write(f'{message}\r\n'.encode())
 
-    async def respond(self):
+    async def respond(self) -> str:
+        """
+        Gets keyboard input from the user
+        :return: Str, user's input
+        """
         response = await self.reader.readuntil(b"\n")
         return response.decode("utf8").strip()
