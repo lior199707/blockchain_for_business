@@ -3,7 +3,9 @@ import asyncio
 
 class User:
 
-    # class Address
+    """
+    Handles users joining to the server
+    """
     def __init__(self,
                  writer: asyncio.StreamWriter,
                  reader: asyncio.StreamReader,
