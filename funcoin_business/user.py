@@ -62,7 +62,11 @@ class User:
         """
         return f'{self.get_ip()}:{self.get_port()}'
 
-    async def receive_message(self, message: str):
+    async def receive_message(self, message: str) -> None:
+        """
+        sending a message to the user using asyncio.StreamWriter
+        :param message: the message to receive
+        """
         self.writer.write(f'{message}\r\n'.encode())
 
     async def respond(self):
