@@ -2,13 +2,21 @@ from time import time
 
 import funcoin_business.blockchain
 from funcoin_business import models
-from funcoin_business.blockchain import Blockchain
+
 
 from marshmallow import Schema, fields, validates_schema, ValidationError, post_load
 from marshmallow.exceptions import MarshmallowError
 
 
-class Address(Schema):
+class AddressSchema(Schema):
+    """
+    class AddressSchema(marshmallow.Schema)
+    {
+        "ip": Str, user ip
+        "port": Int, the port the user is listening on
+    }
+    """
+
     ip = fields.Str(required=True)
     port = fields.Int(required=True)
 
