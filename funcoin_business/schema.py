@@ -60,8 +60,8 @@ class BlockSchema(Schema):
     """
 
     height = fields.Int(required=True)
-    address = fields.Nested(Address(), required=True)
-    transaction = fields.Nested(TransactionSchema(), required=True)
+    address = fields.Nested(AddressSchema(), required=True)
+    transaction = fields.Nested(TransactionSchema(many=True), required=True)
     previous_hash = fields.Str(required=True)
     hash = fields.Str(required=True)
     timestamp = fields.Float(required=True)
