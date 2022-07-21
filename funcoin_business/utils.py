@@ -2,6 +2,9 @@ import asyncio
 import socket
 
 
+import aiohttp
+
+
 # TODO: make the functions static in the User class
 async def get_fake_ip_and_port(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> tuple:
     """
@@ -39,3 +42,15 @@ async def get_ip_and_port() -> tuple:
     finally:
         s.close()
     return IP, port
+
+
+async def get_external_ip():
+    """
+
+    :return: the external ip of the user.
+    """
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://ipinfo.io', headers={"user-agent": "curl/7.64.1"}) as response:
+            response_json = await response.json(content_type=None)
+            ip = response_json["ip"]
+            return ip
