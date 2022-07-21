@@ -25,6 +25,17 @@ class AddressSchema(Schema):
 
 
 class TransactionSchema(Schema):
+    """
+      class TransactionSchema(marshmallow.Schema)
+      {
+          "timestamp": Int, the time the transaction was made
+          "sender": Str, the sender of the transaction.
+          "receiver": Str, the receiver of the transaction
+          "item": Str, the item that was transacted
+          "signature": Str, the signature of the sender
+      }
+      """
+
     timestamp = fields.Int(required=True)
     sender = fields.Str(required=True)
     receiver = fields.Str(required=True)
