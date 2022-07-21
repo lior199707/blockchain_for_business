@@ -1,6 +1,16 @@
 from time import time
 
 
+class Address:
+    def __init__(self, ip: str, port: int):
+        self.ip = ip
+        self.port = port
+
+    def __eq__(self, other):
+        if isinstance(other, Address):
+            return self.ip == other.ip and self.port == other.port
+
+
 class Block:
     def __init__(self, height, address, transaction, previous_hash, hash, timestamp):
         self.height = height
