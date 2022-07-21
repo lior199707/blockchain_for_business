@@ -64,7 +64,7 @@ class BlockSchema(Schema):
     transaction = fields.Nested(TransactionSchema(), required=True)
     previous_hash = fields.Str(required=True)
     hash = fields.Str(required=True)
-    timestamp = fields.Int(required=True)
+    timestamp = fields.Float(required=True)
 
     class Meta:
         ordered = True
