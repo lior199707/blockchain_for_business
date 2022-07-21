@@ -19,6 +19,7 @@ class Block:
         self.transaction = transaction
         self.previous_hash = previous_hash
         self.hash = hash
+        # float
         self.timestamp = timestamp
 
     def __eq__(self, other):
