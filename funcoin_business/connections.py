@@ -1,7 +1,7 @@
 import structlog
 from more_itertools import take
 
-import funcoin_business.user
+from funcoin_business.users.user import User
 
 logger = structlog.getLogger(__name__)
 
@@ -13,6 +13,7 @@ class ConnectionPool:
     keys - user addresses (ip:port)
     value - the user, funcoin_business.user.User
     """
+
     def __init__(self):
         self.connection_pool = dict()
 
@@ -24,13 +25,13 @@ class ConnectionPool:
         for user in list(self.connection_pool.values()):
             await user.receive_message(message)
 
-    def add_peer(self, user: funcoin_business.user.User) -> None:
+    def add_peer(self, user: User) -> None:
         """adds a user to the dictionary of the connected users"""
         address = user.get_address()
         self.connection_pool[address] = user
         logger.info("Added new peer to pool", address=address)
 
-    def remove_peer(self, user: funcoin_business.user.User) -> None:
+    def remove_peer(self, user: User) -> None:
         """Removes a user from the dictionary of the connected users"""
         address = user.get_address()
         self.connection_pool.pop(address)
