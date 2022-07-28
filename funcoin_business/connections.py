@@ -54,3 +54,16 @@ class ConnectionPool:
         :return: The number of authorized users connected to the server
         """
         return len(self.connection_pool)
+
+    def get_access_dict(self, required_access: str):
+        return {key: user for key, user in self.connection_pool.items() if user.get_access() == required_access}
+        # return [user for user in list(self.connection_pool.values()) if user.get_access() == required_access]
+
+
+""" @property
+    def get_dealers(self):
+        return [user for user in list(self.connection_pool.values()) if user.get_access() == User.dealer]
+
+    @property
+    def get_leasing_companies(self):
+        return [user for user in list(self.connection_pool.values()) if user.get_access() == User.le]"""
