@@ -112,7 +112,7 @@ class Server:
         final_address = None
         try:
             # Configure the address
-            final_address = Address().load(address)
+            final_address = AddressSchema().load(address)
         except (MarshmallowError, json.decoder.JSONDecodeError) as e:
             logger.info("Received unauthorized IP and port", peer=writer)
             # Close the connection and clean up
