@@ -23,11 +23,17 @@ logger = structlog.getLogger(__name__)
 
 class Server:
 
-    def __init__(self, blockchain: Blockchain, connection_pool: funcoin_business.connections.ConnectionPool):
+    def __init__(self, blockchain: Blockchain, connection_pool: ConnectionPool,
+                 p2p_protocol, controller):
         self.blockchain = blockchain
         self.connection_pool = connection_pool
+        self.p2p_protocol = p2p_protocol(self)
+        self.controller = controller(self)
         self.is_waiting_for_authorization = False
         self.voter = None
+        self.external_ip = None
+        self.external_port = None
+        self.cars = CarInventory()
 
     @staticmethod
     async def close_connection(writer: asyncio.StreamWriter):
