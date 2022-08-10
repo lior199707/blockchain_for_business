@@ -54,7 +54,9 @@ class Controller:
         await receiver.add_car(copy(car))
 
         # Add the transaction to the blockchain
-        self.server.blockchain.new_transaction(transaction)
+        # Case invalid transaction
+        if not self.server.blockchain.new_transaction(transaction):
+            raise CommandErrorException("Fraudulent transaction")
 
         # Create a transaction message and broadcast it to all connected users.
         transaction_message = create_transaction_message(self.server.external_ip, self.server.external_port, transaction)
