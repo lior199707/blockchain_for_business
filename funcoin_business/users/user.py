@@ -26,8 +26,17 @@ class User:
         self.writer = writer
         self.reader = reader
         self.amount = amount
-        self.is_miner = miner
+        self.miner = miner
         self.address = address
+        self.access = None
+        self.cars = CarInventory()
+
+    @property
+    async def get_next_in_chain(self) -> None:
+        """
+        :raise: NotImplementedError
+        """
+        raise NotImplementedError
 
     def get_writer(self) -> asyncio.StreamWriter:
         """
