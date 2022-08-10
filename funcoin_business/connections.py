@@ -65,5 +65,7 @@ class ConnectionPool:
         :param required_access: The access of the user's next_in_chain
         :return: dict, containing all connected users whose access is the required access
         """
+        if not required_access:
+            return None
         return {key: user for key, user in self.connection_pool.items() if user.get_access() == required_access}
         # return [user for user in list(self.connection_pool.values()) if user.get_access() == required_access]
