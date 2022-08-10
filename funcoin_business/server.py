@@ -300,6 +300,9 @@ class Server:
         server = await asyncio.start_server(self.handle_connection, hostname, port)
         logger.info(f"Server listening on {hostname}:{port}")
 
+        self.external_ip = await get_external_ip()
+        self.external_port = 8888
+
         async with server:
             await server.serve_forever()
 
