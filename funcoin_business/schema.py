@@ -68,7 +68,7 @@ class TransactionSchema(Schema):
           "timestamp": Int, the time the transaction was made
           "sender": Str, the sender of the transaction.
           "receiver": Str, the receiver of the transaction
-          "item": Str, the item that was transacted
+          "item": CarSchema, the car that was transacted
           "signature": Str, the signature of the sender
       }
       """
@@ -76,7 +76,7 @@ class TransactionSchema(Schema):
     timestamp = fields.Int(required=True)
     sender = fields.Str(required=True)
     receiver = fields.Str(required=True)
-    item = fields.Str(required=True)
+    item = fields.Nested(CarSchema(), required=True)
     signature = fields.Str(required=True)
 
     class Meta:
