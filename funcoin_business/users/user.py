@@ -40,44 +40,37 @@ class User:
 
     def get_writer(self) -> asyncio.StreamWriter:
         """
-
         :return:asyncio.StreamWriter, the writer of the user
         """
         return self.writer
 
     def get_reader(self) -> asyncio.StreamReader:
         """
-
         :return: asyncio.StreamReader, the reader of the user
         """
         return self.reader
 
     def is_miner(self) -> bool:
         """
-
         :return:boolean, true if the user is a miner, false otherwise
         """
-
-        return self.is_miner
+        return self.miner
 
     def get_ip(self) -> str:
         """
-
         :return:str, the ip of the user
         """
         return self.address["ip"]
 
     def get_port(self) -> int:
         """
-
         :return:int, the port of the user
         """
         return self.address["port"]
 
     def get_address(self) -> str:
         """
-
-        :return:String, ip:port of the user
+        :return:String, "ip:port" of the user
         """
         return f'{self.get_ip()}:{self.get_port()}'
 
