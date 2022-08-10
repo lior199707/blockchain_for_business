@@ -3,7 +3,6 @@ import socket
 import aiohttp
 
 
-# TODO: make the functions static in the User class
 async def get_fake_ip_and_port(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> tuple:
     """
     Gets user's IP and port as input, IP should be a String, port should be an integer.
