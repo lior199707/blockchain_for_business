@@ -40,4 +40,44 @@ class P2PProtocol:
         if not handler:
             raise P2PError("Missing handler for message")
 
-        await handler(message, writer)
+        msg = await handler(message["payload"])
+        await self.connection_pool.broadcast(msg)
+
+    async def handle_peer(self, peer_payload: dict) -> str:
+        """
+        Handles a peer message
+
+        :param peer_payload: schema.PeerSchema
+        :return: str, the message to broadcast to all connected users about a new peer joining
+        """
+        address = peer_payload["address"]
+        msg = f"New user [ip: {address['ip']}, port: {address['port']}, last_Seen: {peer_payload['last_seen']}]" \
+              f"\r\nis now authorized"
+        return msg
+
+    async def handle_block(self, block_payload: dict):
+        """
+        Handles a block message
+
+        :param block_payload: schema.BlockSchema
+        :return: str, the message to broadcast to all connected users about a new block that was created
+        """
+        pass
+
+    async def handle_transaction(self, transaction_payload: dict) -> str:
+        """
+        Handles a transaction message
+
+        :param transaction_payload: schema.TransactionSchema
+        :return: str, the message to broadcast to all connected users about a transaction was made
+        """
+        car = transaction_payload["item"]
+        msg = "New Transaction:\r\n"
+        msg += f"The time of the transaction: {transaction_payload['timestamp']}\r\n"
+        msg += f"The sender: {transaction_payload['sender']}\r\n"
+        msg += f"The receiver: {transaction_payload['receiver']}, {car['owner']['access']}\r\n"
+        msg += f"The car:\r\n"
+        msg += f"  id: {car['id']}\r\n"
+        msg += f"  model: {car['model']}\r\n"
+        msg += f"  color: {car['color']}"
+        return msg
