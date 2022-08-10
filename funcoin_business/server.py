@@ -22,6 +22,9 @@ logger = structlog.getLogger(__name__)
 
 
 class Server:
+    """
+    Class Server, runs asyncio.start_server, the server contains a lisr of authorized users and a blockchain.
+    """
 
     def __init__(self, blockchain: Blockchain, connection_pool: ConnectionPool,
                  p2p_protocol, controller):
@@ -36,28 +39,73 @@ class Server:
         self.cars = CarInventory()
 
     @staticmethod
-    async def close_connection(writer: asyncio.StreamWriter):
+    async def close_connection(writer: asyncio.StreamWriter) -> None:
+        """
+        Closes the connection of the user.
+        :param writer: asyncio.StreamWriter, the writer of the user.
+        """
         writer.close()
         await writer.wait_closed()
 
-    async def close_connection_unauthorized_user(self, writer: asyncio.StreamWriter):
+    async def close_connection_unauthorized_user(self, writer: asyncio.StreamWriter) -> None:
+        """
+        Closes the connection for unauthorized user.
+        :param writer: syncio.StreamWriter, the writer of the user.
+        :return: None
+        """
         await self.close_connection(writer)
+
+        # Indicating there isn't a user who is waiting for authorization.
         self.is_waiting_for_authorization = False
         return None
 
-    async def close_connection_authorized_user(self, user: funcoin_business.user.User):
+    async def close_connection_authorized_user(self, user: User) -> None:
+        """
+        Closes the connection for authorized user.
+        :param user: User, the user.
+        :return: None
+        """
         await self.close_connection(user.get_writer())
+
+        # Remove the user from the connections pool
         self.connection_pool.remove_peer(user)
-        self.voter.notify_user_quit()
+
+        # Notify the voter a user has left, so if the server is during a vote the vote will be able to end.
+        await self.voter.notify_user_quit()
         return None
 
     async def wait(self, writer: asyncio.StreamWriter) -> None:
+        """
+        Makes a user wait until the authorization process of another user is finished.
+        :param writer: asyncio.StreamWriter, the writer of the user.
+        """
         writer.write("Please wait, another user in the process of connecting\r\n".encode())
         # wait until the process is finished
         while self.is_waiting_for_authorization:
             await asyncio.sleep(5)
 
+    def get_external_ip(self) -> str:
+        """
+
+        :return: the external ip of the user.
+        """
+        return self.external_ip
+
+    def get_external_port(self) -> int:
+        """
+
+        :return: the external port the user is listening to.
+        """
+        return self.external_port
+
     async def load_user_address(self, writer: asyncio.StreamWriter, reader: asyncio.StreamReader):
+        """
+        Gets as keyboard input the ip and port of the user and tries to load it, if exception was raised.
+        closes the connection of the user.
+        :param writer: asyncio.StreamWriter.
+        :param reader: asyncio.StreamReader.
+        :return: schema.AddressSchema(dict), the address of the user, if the address isn't valid returns None.
+        """
         # Get user's address
         address = {}
         address["ip"], address["port"] = await get_fake_ip_and_port(reader, writer)
@@ -182,6 +230,11 @@ class Server:
 
 
 class Voter:
+    """
+    Class Voter, handles votes on the server.
+    Only authorized users can vote.
+    """
+
     def __init__(self, size: int, authorization_word: str):
         self.votes = {}
         self.end_of_vote = size
@@ -189,16 +242,32 @@ class Voter:
         self.authorization_word = authorization_word
 
     def is_vote_ended(self) -> bool:
+        """
+        Should be in track of this method returned bool, it indicates if the vote was ended or not
+        can be used with while loop
+        while not is_vote_ended:
+            sleep
+        :return: True if vote ended, False otherwise.
+        """
         return self.vote_ended
 
     def has_user_vote(self, user: funcoin_business.user.User):
         return user.get_address() in self.votes.keys()
 
-    def add_vote(self, vote: str, address: str) -> None:
+    async def add_vote(self, vote: str, address: str) -> None:
+        """
+        Adds user's vote.
+        :param vote: Str, the answer for the vote
+        :param address: the address if the user that voted.
+        """
         self.votes[address] = vote
         self.check_vote_ended()
 
     def conclude_vote(self) -> bool:
+        """
+        Calculates the decision of the vote based on the votes.
+        :return: True if the vote has passed(more than half of the users was in favor), False otherwise.
+        """
         yes_voters = list(self.votes.values()).count(self.authorization_word)
         if yes_voters >= len(self.votes) / 2.0:
             return True
@@ -206,9 +275,15 @@ class Voter:
 
     def notify_user_quit(self):
         self.end_of_vote -= 1
-        self.check_vote_ended()
 
-    def check_vote_ended(self):
+        # Checks if the vote has ended
+        await self.check_vote_ended()
+
+    async def check_vote_ended(self) -> None:
+        """
+        Checks if the vote ended by the number of votes currently held by the Voter.
+        If the vote ended changes the voter vote_ended attribute to True.
+        """
         if len(self.votes) == self.end_of_vote:
             self.vote_ended = True
 
