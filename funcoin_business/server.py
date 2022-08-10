@@ -279,8 +279,8 @@ class Server:
         try:
             await self.send_welcome_message(user)
             while True:
-                # Handle user message
-                await self.handle_message(user)
+                # Handle user input according to server's state
+                await self.handle_user_input(user)
 
                 await writer.drain()
                 if writer.is_closing():
