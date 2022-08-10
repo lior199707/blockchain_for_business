@@ -277,6 +277,7 @@ class Server:
 
         # User is authorized
         try:
+            await self.send_welcome_message(user)
             while True:
                 # Handle user message
                 await self.handle_message(user)
