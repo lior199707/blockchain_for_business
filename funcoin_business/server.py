@@ -258,8 +258,13 @@ class Server:
             access = await self.get_user_access(user)
 
             # Wait for authorization process to finish
-            if await self.get_authorization_response(user):
+            if await self.handle_authorization_response(user, access):
                 # User is authorized
+                user = await UserFactory().get_user(access, writer, reader, 100, False, address)
+                peer_message = create_peers_message(self.get_external_ip(), self.get_external_port(),
+                                                    PeerSchema().load({"address": address}))
+                peer_message = BaseSchema().loads(peer_message)
+                await self.p2p_protocol.handle_message(peer_message["message"])
                 self.connection_pool.add_peer(user)
             # User is not authorized
             else:
