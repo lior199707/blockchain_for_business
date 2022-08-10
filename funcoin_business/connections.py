@@ -2,6 +2,7 @@ import structlog
 from more_itertools import take
 
 from funcoin_business.users.user import User
+from funcoin_business.users.authorized_user import AuthorizedUser
 
 logger = structlog.getLogger(__name__)
 
