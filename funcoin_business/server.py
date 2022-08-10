@@ -159,10 +159,17 @@ class Server:
             return False
         return self.voter.conclude_vote()
 
-    async def get_authorization_response(self, user: funcoin_business.user.User) -> bool:
+    async def handle_authorization_response(self, user: User, access: str) -> bool:
+        """
+        Handles the result of a vote on the server.
+        :param access: str, the role of the user in the blockchain.
+        :param user: New user joining the server.
+        :return: True if the user is authorized, False otherwise.
+        """
         await user.receive_message("waiting for authorization")
+
         # Conduct a vote about user authorization
-        if await self.conduct_vote(user):
+        if await self.conduct_vote(user, access):
             # User is authorized
             await user.receive_message("you are now authorized")
             return True
