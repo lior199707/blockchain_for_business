@@ -22,6 +22,45 @@ class AddressSchema(Schema):
         ordered = True
 
 
+class OwnerSchema(Schema):
+    """
+    class OwnerSchema(marshmallow.Schema)
+
+    {
+        address: str, ip:port of the owner
+        access: str, the access of the owner
+    }
+    """
+    address = fields.Str(required=True)
+    access = fields.Str(required=True)
+
+    class Meta:
+        ordered = True
+
+
+class CarSchema(Schema):
+    """
+    class CarSchema(marshmallow.Schema)
+    {
+        "id": int, identification number of the car(should be unique).
+        "owner": OwnerSchema
+        {
+            address: str, ip:port of the owner
+            access: str, the access of the owner
+        }
+        model: str, the model of the car
+        color: str, the model of the car
+    }
+    """
+    id = fields.Int(required=True)
+    owner = fields.Nested(OwnerSchema(), required=True)
+    model = fields.Str(required=True)
+    color = fields.Str(required=True)
+
+    class Meta:
+        ordered = True
+
+
 class TransactionSchema(Schema):
     """
       class TransactionSchema(marshmallow.Schema)
