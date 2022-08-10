@@ -1,4 +1,6 @@
 import asyncio
+from funcoin_business.cars.car_inventory import CarInventory
+from funcoin_business.schema import AddressSchema
 
 
 class User:
