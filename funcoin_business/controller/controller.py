@@ -4,6 +4,7 @@ from copy import copy
 from funcoin_business.cars.car import Car
 from funcoin_business.messages import create_transaction_message, BaseSchema
 from funcoin_business.schema import TransactionSchema, CarSchema
+from funcoin_business.blockchain import Blockchain
 
 
 class Controller:
