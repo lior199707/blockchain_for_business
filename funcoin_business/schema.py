@@ -1,8 +1,6 @@
 from time import time
 
 import funcoin_business.blockchain
-from funcoin_business import models
-
 
 from marshmallow import Schema, fields, validates_schema, ValidationError, post_load
 from marshmallow.exceptions import MarshmallowError
