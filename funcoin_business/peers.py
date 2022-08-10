@@ -1,8 +1,5 @@
-import asyncio
-
+from funcoin_business.server import Server
 import structlog
-
-import funcoin_business.server
 
 logger = structlog.getLogger(__name__)
 
