@@ -2,7 +2,6 @@ from marshmallow import Schema, fields, post_load
 from marshmallow_oneofschema import OneOfSchema
 
 from funcoin_business import schema
-from funcoin_business import models
 
 
 class PeerMessage(Schema):
