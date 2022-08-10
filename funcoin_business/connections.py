@@ -56,7 +56,7 @@ class ConnectionPool:
         """
         return len(self.connection_pool)
 
-    def get_access_dict(self, required_access: str):
+    def get_access_dict(self, required_access: str | None) -> dict[str, User] | None:
         """
         The method returns a dict of "ip:port": user(Class)
         containing all the connected users whose access is the required access.
