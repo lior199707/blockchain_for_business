@@ -169,4 +169,3 @@ def create_transaction_message(external_ip, external_port, tx):
         }
     )
 
-# TODO: MESSAGE HANDLER
