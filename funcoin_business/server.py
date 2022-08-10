@@ -120,19 +120,36 @@ class Server:
         else:
             return final_address
 
-    async def conduct_vote(self, user_to_validate: funcoin_business.user.User) -> bool:
+    async def get_user_access(self, user: User):
+        message = f"Please choose your role:\r\n" \
+                  f"[{AuthorizedUser.manufacturer}, {AuthorizedUser.lessee}, {AuthorizedUser.dealer}," \
+                  f"{AuthorizedUser.scrap_merchant}, {AuthorizedUser.leasing_company}]\r\n" \
+                  f"Please type anything else for guest access\r\n"
+        await user.receive_message(message)
+        return await user.respond()
+
+    async def conduct_vote(self, user_to_validate: User, access: str) -> bool:
+        """
+        Conducts an authorization vote in the server.
+        :param access: str, the role of the user in the blockchain.
+        :param user_to_validate: the user wants to join the network.
+        :return: True if the user is authorized, False otherwise.
+        """
         size = self.connection_pool.get_size()
         if size == 0:
             return True
 
+        # Indicate all the users that a new user is requesting to join.
         await self.connection_pool.broadcast(
             f"New user [ip:{user_to_validate.get_ip()}, port: {user_to_validate.get_port()}] is "
-            f"requesting for authorization\r\nrespond with {self.voter.authorization_word} for permission"
+            f"requesting for authorization as {access}\r\n"
+            f"respond with {self.voter.authorization_word} for permission when asked to make your vote"
         )
 
+        # Wait until the vote ends.
         while not self.voter.is_vote_ended():
             await asyncio.sleep(5)
-            # User as disconnected during the vote
+            # New user as disconnected during the vote
             if user_to_validate.get_reader().at_eof():
                 await self.connection_pool.broadcast(f"The user has quit during the vote")
                 return False
