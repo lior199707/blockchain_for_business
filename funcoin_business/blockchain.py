@@ -122,24 +122,21 @@ class Blockchain(object):
             if timestamp < block["timestamp"]:
                 return self.chain[index:]
 
-    def new_transaction(self, transaction: dict) -> None:
+    def new_transaction(self, transaction: dict) -> bool:
         """
         Adds a new transaction to the list of pending transactions.
 
         :param transaction: TransactionSchema, dict with all the transaction details
+        :return: Boolean, indicating if the transaction succeeded or not
         """
         # Validate the transaction
         try:
             tx = TransactionSchema().load(transaction)
         except (MarshmallowError, json.decoder.JSONDecodeError):
             print("Error, invalid transaction")
-            return None
+            return False
 
         # Add the transaction to the list of pending transaction
         self.pending_transactions.append(tx)
         print("pending transactions::::::::::::::::::::::", self.pending_transactions)
-
-        # If the number of pending transation has reached the maximum, create a new block and store it.
-        if len(self.pending_transactions) == 2:
-            print("amount of transactions is 2 so creating a new block")
-            self.add_block(self.new_block())
+        return True
