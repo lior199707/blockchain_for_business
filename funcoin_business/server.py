@@ -174,10 +174,17 @@ class Server:
             await user.receive_message("you are now authorized")
             return True
 
+        # User is not authorized
         await user.receive_message("You are not authorized")
         return False
 
-    async def handle_message(self, user: funcoin_business.user.User):
+    async def handle_user_input(self, user) -> None:
+        """
+        Handles user input according to the server's state.
+        :param user: User(object), The user that sent the message.
+        """
+
+        # If the server is on a vote and the user hasn't voted yet
         if self.is_waiting_for_authorization and not self.voter.has_user_vote(user):
             await user.receive_message("Unauthorized user requesting access please make your vote")
             message = await user.respond()
