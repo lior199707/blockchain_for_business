@@ -1,16 +1,22 @@
 import json
-import socketserver
+from textwrap import dedent
 
 from marshmallow.exceptions import MarshmallowError
 
-import funcoin_business.connections
+from funcoin_business.connections import ConnectionPool
 from funcoin_business.blockchain import Blockchain
 import asyncio
 import structlog
-from funcoin_business.utils import get_fake_ip_and_port
-from funcoin_business.schema import Address
-from funcoin_business.user import User
-import win32api
+from funcoin_business.utils import get_fake_ip_and_port, get_external_ip
+from funcoin_business.schema import AddressSchema
+from funcoin_business.users.user import User
+from funcoin_business.users.authorized_user import AuthorizedUser
+from funcoin_business.messages import create_peers_message
+from funcoin_business.factories.user_factory import UserFactory
+from funcoin_business.cars.car_inventory import CarInventory, NoCarsException
+from funcoin_business.schema import PeerSchema
+from funcoin_business.messages import BaseSchema
+from funcoin_business.commands.commands import CommandErrorException
 
 logger = structlog.getLogger(__name__)
 
