@@ -189,7 +189,7 @@ class Server:
             await user.receive_message("Unauthorized user requesting access please make your vote")
             message = await user.respond()
             await user.receive_message("decision received")
-            self.voter.add_vote(message, user.get_address())
+            await self.voter.add_vote(message, user.get_address())
         else:
             await user.receive_message("respond:")
             message = await user.respond()
