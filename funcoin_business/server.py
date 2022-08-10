@@ -358,7 +358,10 @@ class Voter:
             return True
         return False
 
-    def notify_user_quit(self):
+    async def notify_user_quit(self) -> None:
+        """
+        notifies the voter an authorized user has left during the vote.
+        """
         self.end_of_vote -= 1
 
         # Checks if the vote has ended
