@@ -17,6 +17,7 @@ class Blockchain(object):
     """
     class Blockchain handles a blockchain
     """
+    Max_Transactions = 2
 
     def __init__(self):
         self.chain = []
