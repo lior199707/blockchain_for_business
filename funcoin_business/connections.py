@@ -68,4 +68,11 @@ class ConnectionPool:
         if not required_access:
             return None
         return {key: user for key, user in self.connection_pool.items() if user.get_access() == required_access}
-        # return [user for user in list(self.connection_pool.values()) if user.get_access() == required_access]
+
+    def get_authorized_user(self, address: str) -> AuthorizedUser:
+        """
+
+        :param address: Str, "ip:port" of the user to get
+        :return: AuthorizedUser(object), the user with the given address
+        """
+        return self.connection_pool.get(address)
