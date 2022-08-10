@@ -4,10 +4,11 @@ from funcoin_business.schema import AddressSchema
 
 
 class User:
+    """
+    Class User , handles users with no access(guests), means they can't perform any transactions
+    nor actions, have only read access(can only view information on the server)
+    """
 
-    """
-    Handles users joining to the server
-    """
     def __init__(self,
                  writer: asyncio.StreamWriter,
                  reader: asyncio.StreamReader,
