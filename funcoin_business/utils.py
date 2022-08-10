@@ -43,7 +43,6 @@ async def get_ip_and_port() -> tuple:
 
 async def get_external_ip():
     """
-
     :return: the external ip of the user.
     """
     async with aiohttp.ClientSession() as session:
