@@ -11,7 +11,7 @@ blockchain = Blockchain()
 connection_pool = ConnectionPool()
 
 # Instantiate the server
-server = Server(blockchain, connection_pool)
+server = Server(blockchain, connection_pool, P2PProtocol, Controller)
 
 
 async def main():
