@@ -94,3 +94,10 @@ class User:
         """
         response = await self.reader.readuntil(b"\n")
         return response.decode("utf8").strip()
+
+    async def make_action(self, _) -> None:
+        """
+        :param _: Any, ignorable
+        :raise: NotImplementedError
+        """
+        raise NotImplementedError
