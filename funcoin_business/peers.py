@@ -13,7 +13,10 @@ class P2PProtocol:
     class P2PProtocol handles communication on the server, responsible for handling messages on the server.
     """
 
-    def __init__(self, server: funcoin_business.server.Server):
+    def __init__(self, server: Server):
+        """
+        :param server: Server, the server
+        """
         self.server = server
         self.blockchain = server.blockchain
         self.connection_pool = server.connection_pool
