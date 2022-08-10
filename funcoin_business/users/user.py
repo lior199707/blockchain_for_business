@@ -14,7 +14,7 @@ class User:
                  reader: asyncio.StreamReader,
                  amount: float,
                  miner: bool,
-                 address: dict,
+                 address: AddressSchema,
                  ):
         self.writer = writer
         self.reader = reader
