@@ -293,8 +293,10 @@ class Server:
         # The connection has close, close and clean up
         await self.close_connection_authorized_user(user)
 
-    async def listen(self, hostname="0.0.0.0", port="8888"):
-        # This is the listen method which spawns our server
+    async def listen(self, hostname="0.0.0.0", port="8888") -> None:
+        """
+        This is the listen method which spawns our server
+        """
         server = await asyncio.start_server(self.handle_connection, hostname, port)
         logger.info(f"Server listening on {hostname}:{port}")
 
