@@ -38,7 +38,7 @@ class ConnectionPool:
         self.connection_pool.pop(address)
         logger.info("Removed peer from pool", address=address)
 
-    def get_alive_peers(self, count) -> list:
+    def get_alive_peers(self, count: int) -> list:
         """
 
         :param count: the number of wanted users.
