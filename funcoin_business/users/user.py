@@ -16,6 +16,13 @@ class User:
                  miner: bool,
                  address: AddressSchema,
                  ):
+        """
+        :param writer: asyncio.StreamWriter
+        :param reader: asyncio.StreamReader
+        :param amount: float, the amount of money
+        :param miner: bool, indicates if the user is a miner
+        :param address: dict(schema.AddressSchema), {"ip": ip, "port": port}
+        """
         self.writer = writer
         self.reader = reader
         self.amount = amount
