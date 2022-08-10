@@ -21,19 +21,19 @@ class P2PProtocol:
         self.blockchain = server.blockchain
         self.connection_pool = server.connection_pool
 
-    async def handle_message(self, message, writer):
+    async def handle_message(self, message: dict):
         """
         responsible for identifying the action according to the message name and calling the proper action
         if the name of the action is not valid raising P2PError(Exception).
 
+        :raise: P2PError
         :param message: message object, dict {name: ...,payload: ... }
-        :param writer: asyncio.StreamWriter object, the user
+        TransactionMessage, PeerMessage, BlockMessage
         """
         message_handlers = {
             "block": self.handle_block,
-            "ping": self.handle_ping,
-            "peers": self.handle_peers,
-            "transactions": self.handle_transaction,
+            "peer": self.handle_peer,
+            "transaction": self.handle_transaction,
         }
 
         handler = message_handlers.get(message["name"])
