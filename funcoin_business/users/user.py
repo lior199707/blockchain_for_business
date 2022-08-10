@@ -74,6 +74,12 @@ class User:
         """
         return f'{self.get_ip()}:{self.get_port()}'
 
+    def get_access(self) -> None:
+        """
+        :return: None, guest has no access
+        """
+        return self.access
+
     async def receive_message(self, message: str) -> None:
         """
         sending a message to the user using asyncio.StreamWriter
