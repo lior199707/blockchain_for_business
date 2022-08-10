@@ -193,8 +193,18 @@ class Server:
         else:
             await user.receive_message("respond:")
             message = await user.respond()
-            print("message accepted: ", message)
-            if message == "size":
+            if message == "/action":
+                try:
+                    command, value = await user.make_action(
+                        self.connection_pool.get_access_dict(await user.get_next_in_chain))
+                except NotImplementedError:
+                    await user.receive_message("You are not allowed to make actions")
+                    return None
+                try:
+                    await self.controller.handle_command(command, value)
+                except CommandErrorException as e:
+                    await user.receive_message(str(e))
+            elif message == "/size":
                 print(self.connection_pool.get_size())
 
     async def handle_connection(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
