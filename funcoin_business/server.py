@@ -237,7 +237,6 @@ class Server:
 
         :param reader: asyncio.StreamReader
         :param writer: asyncio.StreamWriter, represents the connecting peer
-        :return:
         """
         # If the server is already in authorization process
         if self.is_waiting_for_authorization:
@@ -254,7 +253,9 @@ class Server:
             address = await self.load_user_address(writer, reader)
 
             user = User(writer, reader, 100, False, address)
-            print("address:", type(user.get_port()))
+
+            # Get user's access
+            access = await self.get_user_access(user)
 
             # Wait for authorization process to finish
             if await self.get_authorization_response(user):
