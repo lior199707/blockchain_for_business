@@ -329,7 +329,12 @@ class Voter:
         """
         return self.vote_ended
 
-    def has_user_vote(self, user: funcoin_business.user.User):
+    def has_user_vote(self, user: User) -> bool:
+        """
+        checks if a user has already voted.
+        :param user: The user.
+        :return: True if the user has already voted, False otherwise.
+        """
         return user.get_address() in self.votes.keys()
 
     async def add_vote(self, vote: str, address: str) -> None:
@@ -339,7 +344,9 @@ class Voter:
         :param address: the address if the user that voted.
         """
         self.votes[address] = vote
-        self.check_vote_ended()
+
+        # Check if the vote has ended
+        await self.check_vote_ended()
 
     def conclude_vote(self) -> bool:
         """
