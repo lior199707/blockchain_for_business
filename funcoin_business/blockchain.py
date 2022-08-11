@@ -140,3 +140,10 @@ class Blockchain(object):
         self.pending_transactions.append(tx)
         print("pending transactions::::::::::::::::::::::", self.pending_transactions)
         return True
+
+    def is_pending_transactions_full(self) -> bool:
+        """
+        Checks if the pending transaction list has reached full capacity
+        :return: Boolean, indicating if full or not
+        """
+        return len(self.pending_transactions) == self.Max_Transactions
