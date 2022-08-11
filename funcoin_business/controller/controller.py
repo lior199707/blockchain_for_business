@@ -87,8 +87,7 @@ class Controller:
         # Add the car to the server's car inventory
         self.server.cars.add_car(car_obj)
         # Broadcast a message to all connected users about the new car.
-        message = f"A new car was created:\r\n{str(car_obj)}"
-        await self.server.connection_pool.broadcast(message)
+        await self.server.connection_pool.broadcast(f"A new car was created:\r\n{str(car_obj)}")
 
     async def handle_error(self, error: str) -> None:
         """
@@ -106,5 +105,4 @@ class Controller:
         """
         # Remove the car from the server's inventory and broadcast a message about it to all connected users.
         await self.server.cars.remove_car(str(car.get_id()))
-        message = f"A car was destroyed:\r\n{str(car)}"
-        await self.server.connection_pool.broadcast(message)
+        await self.server.connection_pool.broadcast(f"A car was destroyed:\r\n{str(car)}")
