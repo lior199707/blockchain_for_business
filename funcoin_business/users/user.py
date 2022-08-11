@@ -35,7 +35,7 @@ class User:
         self.private_key = SigningKey.generate()
 
     @property
-    async def get_next_in_chain(self) -> None:
+    async def get_next_in_chain(self):
         """
         :raise: NotImplementedError
         """
