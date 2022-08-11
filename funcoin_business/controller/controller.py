@@ -5,6 +5,7 @@ from funcoin_business.cars.car import Car
 from funcoin_business.messages import create_transaction_message, BaseSchema
 from funcoin_business.schema import TransactionSchema, CarSchema
 from funcoin_business.blockchain import Blockchain
+from funcoin_business.transactions.transactions import validate_transaction
 
 
 class Controller:
@@ -45,7 +46,16 @@ class Controller:
         receiver = self.server.connection_pool.get_authorized_user(transaction["receiver"])
         car = self.server.cars.get_car(str(transaction["item"]["id"]))
         if not (sender and receiver and car):
-            raise CommandErrorException("Invalid transaction, there was a problem with on of the details")
+            raise CommandErrorException("Invalid transaction, there was a problem with one or more of the details")
+
+        if not validate_transaction(transaction, sender):
+            await self.server.connection_pool.broadcast("A fraudulent transaction was detected")
+            return None
+
+        # Add the transaction to the blockchain
+        # Case invalid transaction
+        if not self.server.blockchain.new_transaction(transaction):
+            raise CommandErrorException("Transaction was failed")
 
         # Delete the car from the sender cars inventory
         await sender.remove_car(str(car.get_id()))
