@@ -24,6 +24,9 @@ def create_transaction(sender: User, receiver: User, car: Car) -> dict:
         "sender": sender.get_address(),
         "receiver": receiver.get_address(),
         "item": item,
-        "signature": "some signature"
     }
+    tx_bytes = json.dumps(tx, sort_keys=True).encode("ascii")
+
+    # Now add the signature to the original transaction
+    tx["signature"] = sender.sign(tx_bytes)
     return tx
