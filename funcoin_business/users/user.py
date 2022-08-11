@@ -104,3 +104,19 @@ class User:
         :raise: NotImplementedError
         """
         raise NotImplementedError
+
+    def get_public_key(self) -> bytes:
+        """
+        :return: <bytes>, encoded verification key of the user, used to verify the user's signatures
+        """
+        return self.private_key.verify_key.encode(encoder=HexEncoder)
+
+    def sign(self, data: bytes) -> str:
+        """
+        Lets the user sign on transactions.
+
+        :param data: bytes, the data to sign on
+        :return: str, representing the encoded signature of the user
+        """
+        signature = self.private_key.sign(data).signature
+        return HexEncoder.encode(signature).decode("ascii")
