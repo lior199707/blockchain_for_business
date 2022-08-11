@@ -77,11 +77,11 @@ class Controller:
             # Broadcast a message to the server about the new block that was added to the blockchain
             await self.server.connection_pool.broadcast("A new Block was added to the blockchain")
 
-    async def handle_new_car(self, car: CarSchema()) -> None:
+    async def handle_new_car(self, car: dict[CarSchema]) -> None:
         """
         Handles new car command, a creation of a new car.
 
-        :param car:
+        :param car: CarSchema, dictionary that represents a car
         """
         car_obj = Car(**car)
         # Add the car to the server's car inventory
