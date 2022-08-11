@@ -32,6 +32,7 @@ class User:
         self.address = address
         self.access = None
         self.cars = CarInventory()
+        self.private_key = SigningKey.generate()
 
     @property
     async def get_next_in_chain(self) -> None:
