@@ -132,8 +132,8 @@ class Blockchain(object):
         # Validate the transaction
         try:
             tx = TransactionSchema().load(transaction)
-        except (MarshmallowError, json.decoder.JSONDecodeError):
-            print("Error, invalid transaction")
+        except (MarshmallowError, json.decoder.JSONDecodeError) as e:
+            logger.error(f"Invalid transaction accepted to blockchain: {str(e)}")
             return False
 
         # Add the transaction to the list of pending transaction
