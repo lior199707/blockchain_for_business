@@ -69,12 +69,12 @@ class Controller:
         await self.server.p2p_protocol.handle_message(message["message"])
 
         # If the number of pending transaction has reached the maximum, create a new block and store it.
-        if len(self.server.blockchain.pending_transactions) == Blockchain.Max_Transactions:
-            print("amount of transactions is 2 so creating a new block")
-            # If the block is not valid
+        if self.server.blockchain.is_pending_transactions_full():
+            # Try to add a new block containing all pending transactions to the blockchain
             if not self.server.blockchain.add_block(self.server.blockchain.new_block()):
+                # If the block is not valid
                 raise CommandErrorException("Fraudulent Block")
-            # Broadcast a message to the server about the new block that was created
+            # Broadcast a message to the server about the new block that was added to the blockchain
             await self.server.connection_pool.broadcast("A new Block was added to the blockchain")
 
     async def handle_new_car(self, car: CarSchema()) -> None:
