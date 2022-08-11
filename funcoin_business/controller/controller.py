@@ -63,17 +63,12 @@ class Controller:
         car.set_owner(receiver.get_address(), receiver.access)
         await receiver.add_car(copy(car))
 
-        # Add the transaction to the blockchain
-        # Case invalid transaction
-        if not self.server.blockchain.new_transaction(transaction):
-            raise CommandErrorException("Fraudulent transaction")
-
         # Create a transaction message and broadcast it to all connected users.
         transaction_message = create_transaction_message(self.server.external_ip, self.server.external_port, transaction)
         message = BaseSchema().loads(transaction_message)
         await self.server.p2p_protocol.handle_message(message["message"])
 
-        # If the number of pending transation has reached the maximum, create a new block and store it.
+        # If the number of pending transaction has reached the maximum, create a new block and store it.
         if len(self.server.blockchain.pending_transactions) == Blockchain.Max_Transactions:
             print("amount of transactions is 2 so creating a new block")
             # If the block is not valid
