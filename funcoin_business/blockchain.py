@@ -106,7 +106,7 @@ class Blockchain(object):
         try:
             verified_block = BlockSchema().load(block)
         except (MarshmallowError, json.decoder.JSONDecodeError) as e:
-            print(e)
+            logger.info(str(e))
             return False
         self.chain.append(verified_block)
         return True
