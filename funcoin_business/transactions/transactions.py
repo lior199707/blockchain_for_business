@@ -30,3 +30,33 @@ def create_transaction(sender: User, receiver: User, car: Car) -> dict:
     # Now add the signature to the original transaction
     tx["signature"] = sender.sign(tx_bytes)
     return tx
+
+
+def validate_transaction(transaction: dict, sender: User) -> bool:
+    """
+    verifies that a given transaction was sent from the sender by his signature
+
+    :param transaction: the Transaction dict
+    :param sender: the sender of the transaction
+    :return: Boolean, True if valid False otherwise
+    """
+    # Copy the transaction
+    tx = transaction.copy()
+
+    # Strip the "signature" key from the tx
+    signature = tx.pop("signature")
+    signature_bytes = HexEncoder.decode(signature)
+
+    tx_bytes = json.dumps(tx, sort_keys=True).encode("ascii")
+
+    # Generate a verifying key from the public key
+    verify_key = VerifyKey(sender.get_public_key(), encoder=HexEncoder)
+
+    # Attempt to verify the signature
+    try:
+        verify_key.verify(tx_bytes, signature_bytes)
+    except BadSignatureError:
+        return False
+    else:
+        return True
+
