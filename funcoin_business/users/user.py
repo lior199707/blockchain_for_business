@@ -74,7 +74,7 @@ class User:
         """
         return f'{self.get_ip()}:{self.get_port()}'
 
-    def get_access(self) -> None:
+    def get_access(self) -> None | str:
         """
         :return: None, guest has no access
         """
