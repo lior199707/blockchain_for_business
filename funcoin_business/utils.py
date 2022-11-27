@@ -13,10 +13,10 @@ async def get_fake_ip_and_port(reader: asyncio.StreamReader, writer: asyncio.Str
     """
     writer.write("> Please enter your ip: ".encode())
     ip = await reader.readuntil(b"\n")
-    decoded_ip = ip.decode("utf8").strip()
+    decoded_ip = get_clean_str(ip.decode("utf8").strip())
     writer.write("> Please enter your port: ".encode())
     port = await reader.readuntil(b"\n")
-    decoded_port = port.decode("utf8").strip()
+    decoded_port = get_clean_str(port.decode("utf8").strip())
     return decoded_ip, decoded_port
 
 
