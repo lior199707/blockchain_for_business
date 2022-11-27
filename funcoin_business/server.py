@@ -147,14 +147,6 @@ class Server:
         else:
             return final_address
 
-    async def get_user_access(self, user: User):
-        message = f"Please choose your role:\r\n" \
-                  f"[{AuthorizedUser.manufacturer}, {AuthorizedUser.lessee}, {AuthorizedUser.dealer}," \
-                  f"{AuthorizedUser.scrap_merchant}, {AuthorizedUser.leasing_company}]\r\n" \
-                  f"Please type anything else for guest access\r\n"
-        await user.receive_message(message)
-        return await user.respond()
-
     async def conduct_vote(self, user_to_validate: User, access: str) -> bool:
         """
         Conducts an authorization vote in the server.
@@ -240,24 +232,6 @@ class Server:
                     await user.receive_message(self.cars.view_cars())
                 except NoCarsException as e:
                     await user.receive_message(str(e))
-
-    async def send_welcome_message(self, user: User) -> None:
-        """
-        Sends a welcome message to a newly connected client
-        :param user: the user to send welcome message to.
-        :param writer: asyncio StreamWriter object, responsible for writing to an underlying connection
-        :return:
-        """
-        message = dedent(f"""
-        \r===            
-        \rHelp: 
-         \r- /action will show your available actions
-         \r- /size will show the number of connected users
-         \r- /access will show your role in the chain
-         \r- /info will show you information about the cars
-        \r===
-        """)
-        await user.receive_message(message)
 
     async def handle_connection(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
         """
