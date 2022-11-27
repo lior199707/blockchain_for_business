@@ -50,6 +50,7 @@ class Controller:
         if not (sender and receiver and car):
             raise CommandErrorException("Invalid transaction, there was a problem with one or more of the details")
 
+        # validate the transaction by sender's signature
         if not validate_transaction(transaction, sender):
             await self.server.connection_pool.broadcast("A fraudulent transaction was detected")
             return None
