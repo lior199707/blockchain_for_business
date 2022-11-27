@@ -8,7 +8,7 @@ class Car:
         instantiates a Car.
 
         :param: ID: int, a unique number
-        :param owner: dict, {address: (ip:port) str, access: str}
+        :param owner: dict, {address: str (ip:port) , access: str}
         :param model: str, the brand of the car
         :param color: str, the color of the car
         """
@@ -25,7 +25,7 @@ class Car:
 
     def get_owner_address(self) -> str:
         """
-        :return: str, ip:port of the owner
+        :return: str, "ip:port" of the owner
         """
         return self.owner["address"]
 
