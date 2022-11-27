@@ -92,6 +92,7 @@ class Server:
         :param user: User, the user.
         :return: None
         """
+        # TODO: REMOVE THE CARS OF THE USER FROM THE SERVERS CAR INVENTORY
         await self.close_connection(user.get_writer())
 
         # Remove the user from the connections pool
