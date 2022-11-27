@@ -145,4 +145,4 @@ class Blockchain(object):
         Checks if the pending transaction list has reached full capacity
         :return: Boolean, indicating if full or not
         """
-        return len(self.pending_transactions) == self.Max_Transactions
+        return len(self.pending_transactions) == self.MAX_TRANSACTIONS
