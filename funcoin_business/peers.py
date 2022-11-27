@@ -19,7 +19,7 @@ class P2PProtocol:
         """
         self.connection_pool = connection_pool
 
-    async def handle_message(self, message: dict):
+    async def handle_message(self, message: dict) -> None:
         """
         responsible for identifying the action according to the message name and calling the proper action
         if the name of the action is not valid raising P2PError(Exception).
