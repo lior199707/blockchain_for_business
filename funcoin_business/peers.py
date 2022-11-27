@@ -1,4 +1,4 @@
-from funcoin_business.server import Server
+from funcoin_business.connections import ConnectionPool
 import structlog
 
 logger = structlog.getLogger(__name__)
@@ -13,13 +13,11 @@ class P2PProtocol:
     class P2PProtocol handles communication on the server, responsible for handling messages on the server.
     """
 
-    def __init__(self, server: Server):
+    def __init__(self, connection_pool: ConnectionPool):
         """
-        :param server: Server, the server
+        :param connection_pool: ConnectionPool, the pool of all connected users
         """
-        self.server = server
-        self.blockchain = server.blockchain
-        self.connection_pool = server.connection_pool
+        self.connection_pool = connection_pool
 
     async def handle_message(self, message: dict):
         """
