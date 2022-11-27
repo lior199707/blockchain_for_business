@@ -162,7 +162,7 @@ class AuthorizedUser(User, ABC):
         """
         self.cars.add_car(car)
 
-    async def remove_car(self, car_id: str) -> None:
+    async def remove_car(self, car_id: str) -> bool:
         """
         Removes a car from the user's car inventory
         :param car_id: str, the id of the car to remove (id is unique)
