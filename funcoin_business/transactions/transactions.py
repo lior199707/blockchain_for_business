@@ -22,8 +22,8 @@ def create_transaction(sender: AuthorizedUser, receiver: AuthorizedUser, car: Ca
     item = CarSchema().loads(CarSchema().dumps(car))
     tx = {
         "timestamp": int(time()),
-        "sender": sender.get_address(),
-        "receiver": receiver.get_address(),
+        "sender": {"address": sender.get_address(), "access": sender.get_access()},
+        "receiver": {"address": receiver.get_address(), "access": receiver.get_access()},
         "item": item,
     }
     tx_bytes = json.dumps(tx, sort_keys=True).encode("ascii")
