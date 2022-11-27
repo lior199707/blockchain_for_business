@@ -1,8 +1,7 @@
 import asyncio
-from funcoin_business.cars.car_inventory import CarInventory
+
 from funcoin_business.schema import AddressSchema
-from nacl.signing import SigningKey
-from nacl.encoding import HexEncoder
+from funcoin_business.utils import get_clean_str
 
 
 class User:
@@ -31,8 +30,6 @@ class User:
         self.miner = miner
         self.address = address
         self.access = None
-        self.cars = CarInventory()
-        self.private_key = SigningKey.generate()
 
     @property
     async def get_next_in_chain(self):
@@ -104,19 +101,3 @@ class User:
         :raise: NotImplementedError
         """
         raise NotImplementedError
-
-    def get_public_key(self) -> bytes:
-        """
-        :return: <bytes>, encoded verification key of the user, used to verify the user's signatures
-        """
-        return self.private_key.verify_key.encode(encoder=HexEncoder)
-
-    def sign(self, data: bytes) -> str:
-        """
-        Lets the user sign on transactions.
-
-        :param data: bytes, the data to sign on
-        :return: str, representing the encoded signature of the user
-        """
-        signature = self.private_key.sign(data).signature
-        return HexEncoder.encode(signature).decode("ascii")
