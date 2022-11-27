@@ -199,7 +199,7 @@ class Server:
 
     async def handle_user_input(self, user) -> None:
         """
-        Handles user input according to the server's state.
+        Handles user input according to the server's state.(regular state or vote state)
         :param user: User(object), The user that sent the message.
         """
 
