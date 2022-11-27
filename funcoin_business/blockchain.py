@@ -46,12 +46,12 @@ class Blockchain(object):
         return block
 
     @staticmethod
-    def hash(block: dict):
+    def hash(block: dict) -> str:
         """
         gets a block and returns its hash calculates by sha256.
 
         :param block: the block to generate it hash.
-        :return:
+        :return: str, the hash if the block using sha256 in hexadecimal.
         """
         # Hashes a block
         # We ensure the dictionary is sorted, or we'll have inconsistent hashes
