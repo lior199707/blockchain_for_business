@@ -50,3 +50,20 @@ async def get_external_ip():
             response_json = await response.json(content_type=None)
             ip = response_json["ip"]
             return ip
+
+
+def get_clean_str(string: str):
+    # find the first appearance of the backspace
+    backspace_index = string.find('\b')
+    # as long as the string contains a backspace char
+    while backspace_index != -1:
+        # if there is a letter before the backspace
+        if backspace_index != 0:
+            # copy all the string except the backspace and the deleted char
+            string = string[:backspace_index - 1] + string[backspace_index + 1:]
+        # else, copy all the string except the backspace
+        else:
+            string = string[:backspace_index] + string[backspace_index + 1:]
+
+        backspace_index = string.find('\b')
+    return string
