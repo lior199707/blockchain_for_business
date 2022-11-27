@@ -166,5 +166,22 @@ class AuthorizedUser(User, ABC):
         """
         Removes a car from the user's car inventory
         :param car_id: str, the id of the car to remove (id is unique)
+        :return: true if succeeded to remove the car from user's inventory, false otherwise
         """
-        await self.cars.remove_car(car_id)
+        return await self.cars.remove_car(car_id)
+
+    def get_public_key(self) -> bytes:
+        """
+        :return: <bytes>, encoded verification key of the user, used to verify the user's signatures
+        """
+        return self.private_key.verify_key.encode(encoder=HexEncoder)
+
+    def sign(self, data: bytes) -> str:
+        """
+        Lets the user sign on transactions.
+
+        :param data: bytes, the data to sign on
+        :return: str, representing the encoded signature of the user
+        """
+        signature = self.private_key.sign(data).signature
+        return HexEncoder.encode(signature).decode("ascii")
