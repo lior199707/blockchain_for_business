@@ -74,8 +74,8 @@ class TransactionSchema(Schema):
       """
 
     timestamp = fields.Int(required=True)
-    sender = fields.Str(required=True)
-    receiver = fields.Str(required=True)
+    sender = fields.Nested(OwnerSchema(), required=True)
+    receiver = fields.Nested(OwnerSchema(), required=True)
     item = fields.Nested(CarSchema(), required=True)
     signature = fields.Str(required=True)
 
