@@ -61,7 +61,8 @@ class Controller:
             raise CommandErrorException("Transaction was failed")
 
         # Delete the car from the sender cars inventory
-        await sender.remove_car(str(car.get_id()))
+        if not await sender.remove_car(str(car.get_id())):
+            raise CommandErrorException("Transaction was failed, couldn't find the car in your inventory")
         # Transfer ownership of the car to the receiver
         car.set_owner(receiver.get_address(), receiver.access)
         await receiver.add_car(copy(car))
