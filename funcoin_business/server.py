@@ -125,7 +125,7 @@ class Server:
         """
         return self.external_port
 
-    async def load_user_address(self, writer: asyncio.StreamWriter, reader: asyncio.StreamReader):
+    async def __load_user_address(self, writer: asyncio.StreamWriter, reader: asyncio.StreamReader):
         """
         Gets as keyboard input the ip and port of the user and tries to load it, if exception was raised.
         closes the connection of the user.
