@@ -93,7 +93,7 @@ class User:
         :return: Str, user's input
         """
         response = await self.reader.readuntil(b"\n")
-        return response.decode("utf8").strip()
+        return get_clean_str(response.decode("utf8").strip())
 
     async def make_action(self, _) -> None:
         """
