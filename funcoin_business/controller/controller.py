@@ -28,6 +28,7 @@ class Controller:
             Command.NEW_CAR: self.handle_new_car,
             Command.TRANSACTION: self.handle_transaction,
             Command.DESTROY_CAR: self.handle_destroy_car,
+            Command.SUCCESS: self.handle_success,
         }
         handler = commands.get(command)
         if handler:
@@ -106,3 +107,10 @@ class Controller:
         # Remove the car from the server's inventory and broadcast a message about it to all connected users.
         await self.server.cars.remove_car(str(car.get_id()))
         await self.server.connection_pool.broadcast(f"A car was destroyed:\r\n{str(car)}")
+
+    async def handle_success(self, _) -> None:
+        """
+        Handles an action on the server that doesn't require performing more actions
+        :return: None
+        """
+        pass
