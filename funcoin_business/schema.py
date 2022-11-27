@@ -27,7 +27,7 @@ class OwnerSchema(Schema):
     class OwnerSchema(marshmallow.Schema)
 
     {
-        address: str, ip:port of the owner
+        address: str, "ip:port" of the owner
         access: str, the access of the owner
     }
     """
