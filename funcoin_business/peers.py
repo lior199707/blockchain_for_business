@@ -53,9 +53,10 @@ class P2PProtocol:
               f"\r\nis now authorized"
         return msg
 
-    async def handle_block(self, block_payload: dict):
+    async def handle_block(self, block_payload: dict) -> None:
         """
         Handles a block message
+        (currently a message about a block created is handled by the controller in handle_transaction)
 
         :param block_payload: schema.BlockSchema
         :return: str, the message to broadcast to all connected users about a new block that was created
