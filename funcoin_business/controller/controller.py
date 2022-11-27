@@ -86,6 +86,8 @@ class Controller:
         Handles new car command, a creation of a new car.
 
         :param car: CarSchema, dictionary that represents a car
+        (accepted as dict and not as Car object in order to prevent aliasing
+        in the server's inventory and the user's inventory)
         """
         car_obj = Car(**car)
         # Add the car to the server's car inventory
