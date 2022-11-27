@@ -47,6 +47,33 @@ class Server:
         writer.close()
         await writer.wait_closed()
 
+    @staticmethod
+    async def get_user_access(user: User) -> str:
+        message = f"Please choose your role:\r\n" \
+                  f"[{AuthorizedUser.manufacturer}, {AuthorizedUser.lessee}, {AuthorizedUser.dealer}," \
+                  f"{AuthorizedUser.scrap_merchant}, {AuthorizedUser.leasing_company}]\r\n" \
+                  f"Please type anything else for guest access\r\n"
+        await user.receive_message(message)
+        return await user.respond()
+
+    @staticmethod
+    async def send_welcome_message(user: User) -> None:
+        """
+        Sends a welcome message to a newly connected client
+        :param user: the user to send welcome message to.
+        :return:
+        """
+        message = dedent(f"""
+        \r===            
+        \rHelp: 
+         \r- /action will show your available actions
+         \r- /size will show the number of connected users
+         \r- /access will show your role in the chain
+         \r- /info will show you information about the cars
+        \r===
+        """)
+        await user.receive_message(message)
+
     async def close_connection_unauthorized_user(self, writer: asyncio.StreamWriter) -> None:
         """
         Closes the connection for unauthorized user.
