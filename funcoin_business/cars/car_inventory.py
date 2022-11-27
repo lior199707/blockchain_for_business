@@ -42,20 +42,6 @@ class CarInventory:
         """
         return self.inventory.get(car_id)
 
-    async def choose_car_from_inventory(self, user) -> Car:
-        """
-        Allows a user to select a car form the inventory by input.
-        :param user: User, the user who chooses the car
-        :return: Car, the car selected by the user
-        """
-        await user.receive_message(f"The cars:\r\n{str(self)}\r\nPlease enter the id of the car you wish to select")
-        while True:
-            ID = await user.respond()
-            car_for_transaction = self.get_car(ID)
-            if car_for_transaction:
-                return car_for_transaction
-            await user.receive_message("Unrecognized car id. please try again")
-
     def view_cars(self) -> str:
         """
         :raises: NoCarsException - if there are no cars in the inventory
