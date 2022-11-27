@@ -1,11 +1,15 @@
-
+from asyncio import StreamReader, StreamWriter
 from abc import ABC
+
+from nacl.signing import SigningKey
+from nacl.encoding import HexEncoder
 
 from funcoin_business.cars.car import Car
 from funcoin_business.cars.car_inventory import NoCarsException
 from funcoin_business.users.user import User
 from funcoin_business.transactions.transactions import create_transaction
 from funcoin_business.commands.commands import Command
+from funcoin_business.cars.car_inventory import CarInventory
 
 
 class AuthorizedUser(User, ABC):
@@ -26,7 +30,19 @@ class AuthorizedUser(User, ABC):
     lessee = "Lessee"
     scrap_merchant = "Scrap Merchant"
 
-    # TODO: TRANSFER THE INITIALIZATION OF THE CAR INVENTORY TO THE CTOR OF THIS CLASS AND DELETE IT FROM USER CLASS
+    def __init__(self, writer: StreamWriter, reader: StreamReader, amount: float, miner: bool,
+                 address: dict):
+        """
+
+        :param writer: asyncio.StreamWriter
+        :param reader: asyncio.StreamReader
+        :param amount: float, the amount of money
+        :param miner: bool, indicates if the user is a miner
+        :param address: dict(schema.AddressSchema), {"ip": ip, "port": port}
+        """
+        super().__init__(writer, reader, amount, miner, address)
+        self.cars = CarInventory()
+        self.private_key = SigningKey.generate()
 
     async def __choose_user_for_transaction(self,
                                             access_dict: dict[str, 'AuthorizedUser'],
