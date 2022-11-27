@@ -251,7 +251,7 @@ class Server:
 
         try:
             # Get user's address: {ip,port}
-            address = await self.load_user_address(writer, reader)
+            address = await self.__load_user_address(writer, reader)
 
             user = User(writer, reader, 100, False, address)
 
