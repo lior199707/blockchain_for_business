@@ -30,7 +30,7 @@ class Server:
                  p2p_protocol, controller):
         self.blockchain = blockchain
         self.connection_pool = connection_pool
-        self.p2p_protocol = p2p_protocol(self)
+        self.p2p_protocol = p2p_protocol(self.connection_pool)
         self.controller = controller(self)
         self.is_waiting_for_authorization = False
         self.voter = None
