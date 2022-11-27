@@ -7,7 +7,6 @@ from nacl.encoding import HexEncoder
 from funcoin_business.cars.car import Car
 from funcoin_business.cars.car_inventory import NoCarsException
 from funcoin_business.users.user import User
-from funcoin_business.transactions.transactions import create_transaction
 from funcoin_business.commands.commands import Command
 from funcoin_business.cars.car_inventory import CarInventory
 
@@ -95,6 +94,7 @@ class AuthorizedUser(User, ABC):
         :return: tuple, if an error occurred return: (Command.Error, str: the error),
         otherwise return: (Command.Transaction, dict: TransactionSchema)
         """
+        from funcoin_business.transactions.transactions import create_transaction
 
         if not self.has_cars():
             return Command.ERROR, "You have no cars in your possession"
