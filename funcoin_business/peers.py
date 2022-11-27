@@ -73,8 +73,8 @@ class P2PProtocol:
         car = transaction_payload["item"]
         msg = "New Transaction:\r\n"
         msg += f"The time of the transaction: {transaction_payload['timestamp']}\r\n"
-        msg += f"The sender: {transaction_payload['sender']}\r\n"
-        msg += f"The receiver: {transaction_payload['receiver']}, {car['owner']['access']}\r\n"
+        msg += f"The sender: {transaction_payload['sender']['address']}, {transaction_payload['sender']['access']}\r\n"
+        msg += f"The receiver: {transaction_payload['receiver']['address']}, {transaction_payload['receiver']['access']}\r\n"
         msg += f"The car:\r\n"
         msg += f"  id: {car['id']}\r\n"
         msg += f"  model: {car['model']}\r\n"
