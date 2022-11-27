@@ -78,7 +78,13 @@ class AuthorizedUser(User, ABC):
         Lets the user choose a car from his car inventory
         :return: Car(object), the car the user chose
         """
-        return await self.cars.choose_car_from_inventory(self)
+        await self.receive_message(f"The cars:\r\n{str(self.cars)}\r\nPlease enter the id of the car you wish to select")
+        while True:
+            ID = await self.respond()
+            car_for_transaction = self.cars.get_car(ID)
+            if car_for_transaction:
+                return car_for_transaction
+            await self.receive_message("Unrecognized car id, please try again")
 
     async def transaction(self,
                           access_dict: dict[str, 'AuthorizedUser']
