@@ -5,12 +5,13 @@ from nacl.exceptions import BadSignatureError
 
 from funcoin_business.schema import CarSchema
 from funcoin_business.cars.car import Car
-from funcoin_business.users.user import User
 from nacl.signing import VerifyKey
 from nacl.encoding import HexEncoder
 
+from funcoin_business.users.authorized_user import AuthorizedUser
 
-def create_transaction(sender: User, receiver: User, car: Car) -> dict:
+
+def create_transaction(sender: AuthorizedUser, receiver: AuthorizedUser, car: Car) -> dict:
     """
 
     :param sender: User(object), the sender of the transaction
@@ -32,7 +33,7 @@ def create_transaction(sender: User, receiver: User, car: Car) -> dict:
     return tx
 
 
-def validate_transaction(transaction: dict, sender: User) -> bool:
+def validate_transaction(transaction: dict, sender: AuthorizedUser) -> bool:
     """
     verifies that a given transaction was sent from the sender by his signature
 
@@ -59,4 +60,3 @@ def validate_transaction(transaction: dict, sender: User) -> bool:
         return False
     else:
         return True
-
