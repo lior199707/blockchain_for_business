@@ -16,7 +16,7 @@ class UserFactory:
     """
 
     def __init__(self):
-        self.authorization_list = {
+        self.authorization_dict = {
 
             AuthorizedUser.dealer: Dealer,
             AuthorizedUser.lessee: Lessee,
@@ -44,7 +44,7 @@ class UserFactory:
         :param address: Str, "ip:port" of the user
         :return: one of the user objects, based on the user access
         """
-        ctor = self.authorization_list.get(access)
+        ctor = self.authorization_dict.get(access)
         if not ctor:
             return User(writer, reader, 100, False, address)
         return ctor(writer, reader, 100, False, address)
