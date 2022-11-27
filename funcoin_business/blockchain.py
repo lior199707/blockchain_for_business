@@ -28,7 +28,7 @@ class Blockchain(object):
 
     def new_block(self):
         """
-        creates a new block.
+        creates a new block containing all the pending transactions
 
         :return: the block.
         """
