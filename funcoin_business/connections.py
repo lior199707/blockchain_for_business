@@ -44,8 +44,6 @@ class ConnectionPool:
         :param count: the number of wanted users.
         :return: list containing the first 'count' users in the pool
         """
-        # TODO (Reader): Sort these by most active,
-        #  but let's just get the first *count* of them for now
         return take(count, self.connection_pool.items())
         # return [user.address for user in list(self.connection_pool.values())[:count]]
 
