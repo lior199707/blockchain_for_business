@@ -43,8 +43,9 @@ class Controller:
         :param transaction: TransactionSchema, the transaction details.
         """
         # load sender receiver and car
-        sender = self.server.connection_pool.get_authorized_user(transaction["sender"])
-        receiver = self.server.connection_pool.get_authorized_user(transaction["receiver"])
+        sender = self.server.connection_pool.get_authorized_user(transaction["sender"]["address"])
+        receiver = self.server.connection_pool.get_authorized_user(transaction["receiver"]["address"])
+        # loads the car from the server's car list
         car = self.server.cars.get_car(str(transaction["item"]["id"]))
         if not (sender and receiver and car):
             raise CommandErrorException("Invalid transaction, there was a problem with one or more of the details")
