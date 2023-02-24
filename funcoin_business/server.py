@@ -198,6 +198,35 @@ class Server:
         await user.receive_message("You are not authorized")
         return False
 
+    async def handle_pending_transactions(self, user: AuthorizedUser) -> None:
+        """
+        Handles an authorized user who has pending transactions
+        :param user: the authorized user.
+        :return:
+        """
+
+        user_choice = 'y'
+        await user.receive_message("You have pending transaction waiting for your approval, would you like to"
+                                   "attend them?(y / n)")
+        while True:
+            answer = await user.respond()
+            if answer == "n":
+                return
+            elif answer == "y":
+                break
+            await user.receive_message("Invalid input, please try again")
+
+        # user handles his pending transactions
+        # get the first pending transaction of the user
+        # TODO: get the unapproved transactions list and let the controller handle it
+        #  (change the car.is_in_pending_transaction value to false because the transaction was denied)
+        approved_transactions = await user.handle_pending_transaction()
+        for at in approved_transactions:
+            try:
+                await self.controller.handle_approved_transaction(at)
+            except CommandErrorException as e:
+                await user.receive_message(str(e))
+
     async def handle_user_input(self, user) -> None:
         """
         Handles user input according to the server's state.(regular state or vote state)
@@ -240,6 +269,7 @@ class Server:
         :param reader: asyncio.StreamReader
         :param writer: asyncio.StreamWriter, represents the connecting peer
         """
+
         # If the server is already in authorization process
         if self.is_waiting_for_authorization:
             # wait until authorization process ends
