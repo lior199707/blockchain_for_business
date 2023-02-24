@@ -17,6 +17,8 @@ class Car:
         self.model = model
         self.color = color
 
+        # TODO: add a bool var indicating if a car is in a pending transaction, init value is false
+
     def get_id(self) -> int:
         """
         :return: int, the ID of the car
@@ -46,6 +48,8 @@ class Car:
         :return: str, the color of the car
         """
         return self.color
+
+    # TODO: method that returns bool if the car is in_pending_tranasction
 
     def set_owner(self, address: str, access: str) -> None:
         """
