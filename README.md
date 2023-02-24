@@ -28,28 +28,28 @@ After a user chooses his access the server conducts a vote, all the connected us
 
 ### Accesses permissions.
 
-* Guest
+* Guest<br>
   The guest can only use the /info command to watch all the cars and their details (color, model, owner) in the server's shared ledger.<br>
   He is not allowed to have/own any cars or making transactions.
   
-* Manufacturer
+* Manufacturer<br>
   The manufacturer can create new cars.<br> 
   He can make a pending transaction of a car to a dealer on the srver that should be authorized by said dealer.<br>
   He can watch his own inventory of cars.
 
-* Dealer
+* Dealer<br>
   The dealer can make a pending transaction of a car to a leasing company on the srver that should be authorized by said leasing company.<br>
   He can watch his own inventory of cars.
 
-* Leasing Company
+* Leasing Company<br>
   The leasing company can make a pending transaction of a car to a lessee on the srver that should be authorized by said lessee.<br>
   Can watch it's own inventory of cars.
 
-* Lessee 
+* Lessee<br>
   The dealer can make a pending transaction of a car to a scrap merchant on the srver that should be authorized by said scrap merchant.<br>
   He can watch his own inventory of cars.
   
-* Scrap Merchant
+* Scrap Merchant<br>
   The scrap merchant can destroy cars which will erase them from the server's inventory.<br>
   He can watch his own inventory of cars.
   
@@ -105,6 +105,29 @@ class BlockSchema(Schema):
     class Meta:
         ordered = True
 ```
+
+Watch schema.py for more schemas.
+
+## Predependencies
+
+pycharm installed ot python virtual env.<br>
+telnet enabled.
+
+## Usage
+
+clone the project and open it in pycharm.<br>
+run node.py file.<br>
+open a cmd / windows powershall and type: telnet 127.0.0.1 8888
+
+
+## Tools in use
+
+* asyncio - for handling the server and the users.
+* marshmallow and marshmallow_oneofschema - for validating transactions, blocks and constructing messages.
+* pynacl - for users private and public keys, for validating transactions by the private key's signature.
+* blockchain - for storing transactions and as a shared ledger.
+
+
 
 
 
