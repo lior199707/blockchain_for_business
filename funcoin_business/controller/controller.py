@@ -77,8 +77,10 @@ class Controller:
         #     # Broadcast a message to the server about the new block that was added to the blockchain
         #     await self.server.connection_pool.broadcast("A new Block was added to the blockchain")
 
-        :param transaction: TransactionSchema, the transaction details.
-        """
+    # TODO: add a method which handles unapproved transaction(load the receiver and car from the transaction, make
+    #  sure the receiver is the owner of the car and changes is_in_pending_transaction = false because the tx was denied)
+
+    async def handle_approved_transaction(self, transaction: TransactionSchema()):
         # load sender receiver and car
         sender = self.server.connection_pool.get_authorized_user(transaction["sender"]["address"])
         receiver = self.server.connection_pool.get_authorized_user(transaction["receiver"]["address"])
