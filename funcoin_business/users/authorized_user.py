@@ -9,6 +9,9 @@ from funcoin_business.cars.car_inventory import NoCarsException
 from funcoin_business.users.user import User
 from funcoin_business.commands.commands import Command
 from funcoin_business.cars.car_inventory import CarInventory
+from funcoin_business.schema import TransactionSchema
+
+import queue
 
 
 class AuthorizedUser(User, ABC):
@@ -41,6 +44,7 @@ class AuthorizedUser(User, ABC):
         """
         super().__init__(writer, reader, amount, miner, address)
         self.cars = CarInventory()
+        self.pending_transactions_q = queue.SimpleQueue()
         self.private_key = SigningKey.generate()
 
     async def __choose_user_for_transaction(self,
@@ -110,6 +114,8 @@ class AuthorizedUser(User, ABC):
 
         if not transaction_partner and transaction_car:
             return Command.ERROR, "Something went wrong with the transaction"
+
+        # TODO: check if the transaction car is already in a pending transaction, if true return Command.ERROR
 
         return Command.TRANSACTION, create_transaction(self, transaction_partner, transaction_car)
 
@@ -185,3 +191,55 @@ class AuthorizedUser(User, ABC):
         """
         signature = self.private_key.sign(data).signature
         return HexEncoder.encode(signature).decode("ascii")
+
+    def has_pending_transactions(self) -> bool:
+        return not self.pending_transactions_q.empty()
+
+    async def get_pending_transaction(self):
+        """
+        gets the oldest pending transaction
+        :return: TransactionSchema, the oldest pending transaction
+        """
+        return self.pending_transactions_q.get()
+
+    async def add_pending_transaction(self, transaction: TransactionSchema()):
+        self.pending_transactions_q.put(transaction)
+
+    async def handle_pending_transaction(self) -> [TransactionSchema()]:
+        # TODO: add an unapproved transactions list and return it
+        approved_transactions = []
+        user_choice_to_proceed = 'y'
+        # As long as the user wants to proceed
+        while user_choice_to_proceed == 'y':
+            curr_transaction = await self.get_pending_transaction()
+            await self.receive_message("The transaction:\r\n" + str(curr_transaction) + "\r\nAnswer 'y' to approve it "
+                                                                                        "and 'n' to decline\r\n")
+            answer = await self.get_yes_no_answer()
+            if answer == "y":
+                approved_transactions.append(curr_transaction)
+            await self.receive_message("decision received")
+            #  if the user has no pending transactions
+            if not self.has_pending_transactions():
+                break
+            else:
+                await self.receive_message("Would you like to move to the next pending transaction? (y / n)")
+                user_choice_to_proceed = await self.get_yes_no_answer()
+        print("approved transactions: " + str(approved_transactions))
+        return approved_transactions
+
+    async def get_yes_no_answer(self) -> str:
+        while True:
+            user_choice_to_proceed = await self.respond()
+            if user_choice_to_proceed in ('y', 'n'):
+                break
+            await self.receive_message("Invalid input, please try again")
+        return user_choice_to_proceed
+
+
+
+
+
+
+
+
+
