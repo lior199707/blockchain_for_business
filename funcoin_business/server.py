@@ -17,6 +17,7 @@ from funcoin_business.cars.car_inventory import CarInventory, NoCarsException
 from funcoin_business.schema import PeerSchema
 from funcoin_business.messages import BaseSchema
 from funcoin_business.commands.commands import CommandErrorException
+from funcoin_business.users.authorized_user import AuthorizedUser
 
 logger = structlog.getLogger(__name__)
 
@@ -239,29 +240,33 @@ class Server:
             message = await user.respond()
             await user.receive_message("decision received")
             await self.voter.add_vote(message, user.get_address())
-        else:
-            await user.receive_message("respond:")
-            message = await user.respond()
-            if message == "/action":
-                try:
-                    command, value = await user.make_action(
-                        self.connection_pool.get_access_dict(await user.get_next_in_chain))
-                except NotImplementedError:
-                    await user.receive_message("You are not allowed to make actions")
-                    return None
-                try:
-                    await self.controller.handle_command(command, value)
-                except CommandErrorException as e:
-                    await user.receive_message(str(e))
-            elif message == "/size":
-                print(self.connection_pool.get_size())
-            elif message == "/access":
-                await user.receive_message(f"Your access is: {user.get_access()}")
-            elif message == "/info":
-                try:
-                    await user.receive_message(self.cars.view_cars())
-                except NoCarsException as e:
-                    await user.receive_message(str(e))
+            # TODO: finish the transaction update
+        if isinstance(user, AuthorizedUser):
+            if user.has_pending_transactions():
+                await self.handle_pending_transactions(user)
+
+        await user.receive_message("respond:")
+        message = await user.respond()
+        if message == "/action":
+            try:
+                command, value = await user.make_action(
+                    self.connection_pool.get_access_dict(await user.get_next_in_chain))
+            except NotImplementedError:
+                await user.receive_message("You are not allowed to make actions")
+                return None
+            try:
+                await self.controller.handle_command(command, value)
+            except CommandErrorException as e:
+                await user.receive_message(str(e))
+        elif message == "/size":
+            print(self.connection_pool.get_size())
+        elif message == "/access":
+            await user.receive_message(f"Your access is: {user.get_access()}")
+        elif message == "/info":
+            try:
+                await user.receive_message(self.cars.view_cars())
+            except NoCarsException as e:
+                await user.receive_message(str(e))
 
     async def handle_connection(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
         """
