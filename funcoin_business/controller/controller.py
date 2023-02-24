@@ -36,9 +36,87 @@ class Controller:
         else:
             raise CommandErrorException("Invalid command")
 
+    # async def handle_transaction(self, transaction: TransactionSchema()) -> None:
+
+        # # load sender receiver and car
+        # sender = self.server.connection_pool.get_authorized_user(transaction["sender"]["address"])
+        # receiver = self.server.connection_pool.get_authorized_user(transaction["receiver"]["address"])
+        # # loads the car from the server's car list
+        # car = self.server.cars.get_car(str(transaction["item"]["id"]))
+        # if not (sender and receiver and car):
+        #     raise CommandErrorException("Invalid transaction, there was a problem with one or more of the details")
+        #
+        # # validate the transaction by sender's signature
+        # if not validate_transaction(transaction, sender):
+        #     await self.server.connection_pool.broadcast("A fraudulent transaction was detected")
+        #     return None
+        #
+        # # Add the transaction to the blockchain
+        # # Case invalid transaction
+        # if not self.server.blockchain.new_transaction(transaction):
+        #     raise CommandErrorException("Transaction was failed")
+        #
+        # # Delete the car from the sender cars inventory
+        # if not await sender.remove_car(str(car.get_id())):
+        #     raise CommandErrorException("Transaction was failed, couldn't find the car in your inventory")
+        # # Transfer ownership of the car to the receiver
+        # car.set_owner(receiver.get_address(), receiver.access)
+        # await receiver.add_car(copy(car))
+        #
+        # # Create a transaction message and broadcast it to all connected users.
+        # transaction_message = create_transaction_message(self.server.external_ip, self.server.external_port, transaction)
+        # message = BaseSchema().loads(transaction_message)
+        # await self.server.p2p_protocol.handle_message(message["message"])
+        #
+        # # If the number of pending transaction has reached the maximum, create a new block and store it.
+        # if self.server.blockchain.is_pending_transactions_full():
+        #     # Try to add a new block containing all pending transactions to the blockchain
+        #     if not self.server.blockchain.add_block(self.server.blockchain.new_block()):
+        #         # If the block is not valid
+        #         raise CommandErrorException("Fraudulent Block")
+        #     # Broadcast a message to the server about the new block that was added to the blockchain
+        #     await self.server.connection_pool.broadcast("A new Block was added to the blockchain")
+
+        :param transaction: TransactionSchema, the transaction details.
+        """
+        # load sender receiver and car
+        sender = self.server.connection_pool.get_authorized_user(transaction["sender"]["address"])
+        receiver = self.server.connection_pool.get_authorized_user(transaction["receiver"]["address"])
+        # loads the car from the server's car list
+        car = self.server.cars.get_car(str(transaction["item"]["id"]))
+        if not (sender and receiver and car):
+            raise CommandErrorException("Invalid transaction, there was a problem with one or more of the details")
+        # Add the transaction to the blockchain
+        # Case invalid transaction
+        if not self.server.blockchain.new_transaction(transaction):
+            raise CommandErrorException("Transaction was failed")
+
+        # Delete the car from the sender cars inventory
+        if not await sender.remove_car(str(car.get_id())):
+            raise CommandErrorException(f"Transaction was failed, couldn't find the car: {str(car)} in owner's inventory")
+        # Transfer ownership of the car to the receiver
+        car.set_owner(receiver.get_address(), receiver.access)
+        await receiver.add_car(copy(car))
+
+        # Create a transaction message and broadcast it to all connected users.
+        transaction_message = create_transaction_message(self.server.external_ip, self.server.external_port,
+                                                         transaction)
+        message = BaseSchema().loads(transaction_message)
+        await self.server.p2p_protocol.handle_message(message["message"])
+
+        # If the number of pending transaction has reached the maximum, create a new block and store it.
+        if self.server.blockchain.is_pending_transactions_full():
+            # Try to add a new block containing all pending transactions to the blockchain
+            if not self.server.blockchain.add_block(self.server.blockchain.new_block()):
+                # If the block is not valid
+                raise CommandErrorException("Fraudulent Block")
+            # Broadcast a message to the server about the new block that was added to the blockchain
+            await self.server.connection_pool.broadcast("A new Block was added to the blockchain")
+
     async def handle_transaction(self, transaction: TransactionSchema()) -> None:
         """
-        Handles transaction command, a transaction made by a user.
+        Handles transaction command, a transaction made by a user, validates the transaction and adds it
+        to the receivers pending transactions
 
         :param transaction: TransactionSchema, the transaction details.
         """
@@ -55,31 +133,9 @@ class Controller:
             await self.server.connection_pool.broadcast("A fraudulent transaction was detected")
             return None
 
-        # Add the transaction to the blockchain
-        # Case invalid transaction
-        if not self.server.blockchain.new_transaction(transaction):
-            raise CommandErrorException("Transaction was failed")
-
-        # Delete the car from the sender cars inventory
-        if not await sender.remove_car(str(car.get_id())):
-            raise CommandErrorException("Transaction was failed, couldn't find the car in your inventory")
-        # Transfer ownership of the car to the receiver
-        car.set_owner(receiver.get_address(), receiver.access)
-        await receiver.add_car(copy(car))
-
-        # Create a transaction message and broadcast it to all connected users.
-        transaction_message = create_transaction_message(self.server.external_ip, self.server.external_port, transaction)
-        message = BaseSchema().loads(transaction_message)
-        await self.server.p2p_protocol.handle_message(message["message"])
-
-        # If the number of pending transaction has reached the maximum, create a new block and store it.
-        if self.server.blockchain.is_pending_transactions_full():
-            # Try to add a new block containing all pending transactions to the blockchain
-            if not self.server.blockchain.add_block(self.server.blockchain.new_block()):
-                # If the block is not valid
-                raise CommandErrorException("Fraudulent Block")
-            # Broadcast a message to the server about the new block that was added to the blockchain
-            await self.server.connection_pool.broadcast("A new Block was added to the blockchain")
+        # add the transaction to the receiver's pending transactions
+        # TODO: get the car from the sender by the cars ID and do car.is_in_pending_transaction = true
+        await receiver.add_pending_transaction(transaction)
 
     async def handle_new_car(self, car: dict[CarSchema]) -> None:
         """
